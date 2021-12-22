@@ -2,45 +2,40 @@ const main = async () => {
   const [owner, randomPerson] = await hre.ethers.getSigners();
   const m = new Map();
 
-  const waveContractFactory = await hre.ethers.getContractFactory('WavePortal');
-  const waveContract = await waveContractFactory.deploy();
-  await waveContract.deployed();
+  const pokeContractFactory = await hre.ethers.getContractFactory('PokePortal');
+  const pokeContract = await pokeContractFactory.deploy();
+  await pokeContract.deployed();
 
-  console.log("Contract deployed to:", waveContract.address);
+  console.log("Contract deployed to:", pokeContract.address);
   console.log("Contract deployed by:", owner.address);
 
-  let waveCount;
-  waveCount = await waveContract.getTotalWaves();
+  let pokeCount;
+  pokeCount = await pokeContract.getTotalPokes();
 
-  let wave;
-  wave = await waveContract.wave();
-  await wave.wait();
+  let poke;
+  poke = await pokeContract.poke();
+  await poke.wait();
 
-  let n = await waveContract.getTotalWaves();
+  let n = await pokeContract.getTotalPokes();
   n = n.toNumber();
-  m.set(n, wave.address);
+  m.set(n, poke.address);
 
-  //waveCount = await waveContract.getTotalWaves();
+  poke = await pokeContract.connect(randomPerson).poke();
+  await poke.wait();
 
-  wave = await waveContract.connect(randomPerson).wave();
-  await wave.wait();
-
-  n = await waveContract.getTotalWaves();
+  n = await pokeContract.getTotalsPokes();
   n = n.toNumber();
   m.set(n, randomPerson.address);
-  console.log("------------------");
+
   console.log(randomPerson.address);
-  console.log(await waveContract.getLastWaver());
+  console.log(await pokeContract.getLastPoker());
 
-    console.log("------------------");
 
-  n = await waveContract.getTotalWaves();
+  n = await pokeContract.getTotalPokes();
   n = n.toNumber();
   console.log(n);
   console.log(m.get(n-1));
   console.log(m.size);
-
-  //waitCount = await waveContract.getTotalWaves();
 
 };
 

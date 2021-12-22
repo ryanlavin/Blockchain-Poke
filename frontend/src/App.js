@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import logo from './logo.svg';
 import './App.css';
 import { ethers } from "ethers";
@@ -6,10 +6,7 @@ import { ethers } from "ethers";
 function App() {
   const [currentAccount, setCurrentAccount] = useState();
 
-
-
-
-  const checkIfWalletIsConnected = () => {
+  const checkIfWalletIsConnected = async () => {
     try {
       const {ethereum} = window;
 
@@ -19,7 +16,8 @@ function App() {
       } else {
         console.log("We have the ethereum object", ethereum);
       }
-      const accounts = await ethereum.request({methods: 'eth_accounts'});
+
+      const accounts = await ethereum.request({method: 'eth_accounts'});
       if (accounts.length !== 0) {
         const account = accounts[0];
         console.log("Found an authorized account:", account);
@@ -32,16 +30,40 @@ function App() {
     }
   }
 
+  const connectWallet = async () => {
+    try {
+      const {ethereum} = window;
+
+      if(!ethereum) {
+        alert("Go to the Google Chrome store to download Metamask!");
+        return;
+      }
+
+      const accounts = await ethereum.request({method: "eth_requestAccounts"});
+
+      console.log("Connected", accounts[0]);
+      setCurrentAccount(accounts[0]);
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 
   useEffect(() => {
     checkIfWalletIsConnected();
   }, [])
-  const wave = () => {
 
+  const poke = async () => {
+    try{
+      const {ethereum} = window;
+      if(ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
-
-
-
 
   return (
    <div className="mainContainer">
@@ -52,12 +74,17 @@ function App() {
         </div>
 
         <div className="bio">
-        I am farza and I worked on self-driving cars so that's pretty cool right? Connect your Ethereum wallet and wave at me!
+        My name's Ryan and I am a blockchain dev. Feel free to poke me and leave a message!
         </div>
 
-        <button className="waveButton" onClick={wave}>
-          Wave at Me
+        <button className="pokeButton" onClick={poke}>
+          Poke Me
         </button>
+        {!currentAccount && (
+          <button className="pokeButton" onClick={connectWallet}>
+                Connect Wallet
+          </button>
+        )}
       </div>
     </div>
   );
