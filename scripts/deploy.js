@@ -4,14 +4,14 @@ const { ethers } = require("hardhat");
 const main = async () => {
     const [deployer] = await hre.ethers.getSigners();
     const accountBalance = await deployer.getBalance();
+    const deployerAddress = await deployer.getAddress();
 
-    console.log('Deploying contracts with account: ', deployer.address);
+    console.log('Deploying contracts with account: ', deployerAddress);
     console.log('Account balance: ', accountBalance.toString());
 
     const Token = await hre.ethers.getContractFactory('PokePortal');
     const portal = await Token.deploy();
     await portal.deployed();
-
     console.log("PokePortal address: ", portal.address);
 };
 

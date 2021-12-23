@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import logo from './logo.svg';
 import './App.css';
 import { ethers } from "ethers";
+import abi from './utils/PokePortal.json';
 
 function App() {
   const [currentAccount, setCurrentAccount] = useState();
+  const contractAddress = "0x4096349688cb5E4CF2f17Cf55BfB6Cd37B31c1dF";
+  const contractABI = abi.abi;
 
   const checkIfWalletIsConnected = async () => {
     try {
@@ -48,21 +51,19 @@ function App() {
     }
   }
 
-
   useEffect(() => {
     checkIfWalletIsConnected();
   }, [])
 
   const poke = async () => {
-    try{
-      const {ethereum} = window;
-      if(ethereum) {
-        const provider = new ethers.providers.Web3Provider(ethereum);
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
-      }
-    } catch (error) {
-      console.log(error);
-    }
+        const pokePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+        //await pokePortalContract.deployTransaction.wait()
+
+        console.log(contractAddress);
+        let count = await pokePortalContract.getTotalPokes();
+        console.log("Retrieved the total number of waves: %s", count.toNumber());
   }
 
   return (

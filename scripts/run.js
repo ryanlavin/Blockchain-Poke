@@ -17,24 +17,24 @@ const main = async () => {
   await poke.wait();
 
   let n = await pokeContract.getTotalPokes();
+  console.log(n.toNumber());
   n = n.toNumber();
   m.set(n, poke.address);
 
-  poke = await pokeContract.connect(randomPerson).poke();
-  await poke.wait();
+  //poke = await pokeContract.connect(randomPerson).poke();
+  //await poke.wait();
 
-  n = await pokeContract.getTotalsPokes();
+  n = await pokeContract.getTotalPokes();
   n = n.toNumber();
-  m.set(n, randomPerson.address);
+  //m.set(n, randomPerson.address);
 
-  console.log(randomPerson.address);
+  //console.log(randomPerson.address);
   console.log(await pokeContract.getLastPoker());
-
 
   n = await pokeContract.getTotalPokes();
   n = n.toNumber();
   console.log(n);
-  console.log(m.get(n-1));
+  //console.log(m.get(n));
   console.log(m.size);
 
 };
