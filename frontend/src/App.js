@@ -56,14 +56,27 @@ function App() {
   }, [])
 
   const poke = async () => {
+    const { ethereum } = window
+    if(ethereum){
+      try {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const pokePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
-        //await pokePortalContract.deployTransaction.wait()
 
         console.log(contractAddress);
         let count = await pokePortalContract.getTotalPokes();
         console.log("Retrieved the total number of waves: %s", count.toNumber());
+
+        let pokeTx = await pokePortalContract.poke();
+        console.log("Awaiting Tx: ", pokeTx.hash);
+
+        await pokeTx.wait();
+        console.log("Mined -- ", pokeTx.hash);
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
   }
 
   return (
