@@ -61,21 +61,37 @@ function App() {
       try {
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
-        const pokePortalContract = new ethers.Contract(contractAddress, contractABI, signer);
+        const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
-        console.log(contractAddress);
-        let count = await pokePortalContract.getTotalPokes();
-        console.log("Retrieved the total number of waves: %s", count.toNumber());
-
-        let pokeTx = await pokePortalContract.poke();
+        let pokeTx = await contract.poke();
         console.log("Awaiting Tx: ", pokeTx.hash);
 
         await pokeTx.wait();
         console.log("Mined -- ", pokeTx.hash);
+        let str = pokeTx.hash.toString();
+        console.log("Link: https://rinkeby.etherscan.io/tx/" + str);
 
       } catch (error) {
         console.log(error);
       }
+    }
+  }
+
+  const getTotalPokes = async () => {
+    const {ethereum} = window;
+    if(ethereum) {
+      try {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(contractAddress, contractABI, signer);
+
+        let readTx = await contract.getTotalPokes();
+        console.log("There have been %s pokes", readTx.toNumber());
+
+      } catch (error) {
+        console.log(error);
+      }
+
     }
   }
 
@@ -91,11 +107,16 @@ function App() {
         My name's Ryan and I am a blockchain dev. Feel free to poke me and leave a message!
         </div>
 
-        <button className="pokeButton" onClick={poke}>
-          Poke Me
-        </button>
+        <div className="funcButtons">
+          <button id="pokeButton" onClick={poke}>
+            Poke Me
+          </button>
+          <button id="getPokesButton" onClick={getTotalPokes}>
+            Get Total # of pokes!
+          </button>
+          </div>
         {!currentAccount && (
-          <button className="pokeButton" onClick={connectWallet}>
+          <button className="walletButton" onClick={connectWallet}>
                 Connect Wallet
           </button>
         )}

@@ -24,11 +24,40 @@
   margin-top: 16px;
 }
 
-.pokeButton {
+.walletButton {
   cursor: pointer;
   margin-top: 16px;
   padding: 8px;
   border: 0;
   border-radius: 5px;
+}
 
+.funcButtons {
+  display: flex;
+  flex-direction: row;
+  max-height: 50px;
+  min-width: 500px;
+}
+
+#pokeButton {
+    cursor: pointer;
+    justify-content: center;
+  margin-right: 10px;
+    margin-top: 16px;
+    padding: 8px;
+    border: 0;
+    border-radius: 5px;
+  flex-grow: 2;
+}
+
+#getPokesButton {
+  cursor: pointer;
+  align-content: end;
+  justify-content: center;
+  margin-left: 10px;
+    margin-top: 16px;
+    padding: 8px;
+    border: 0;
+    border-radius: 5px;
+  flex-grow: 2;
 }
