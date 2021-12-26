@@ -11,8 +11,6 @@ const main = async () => {
 
   let pokeTx = pokeContract.poke("Some message");
   await pokeTx.wait;
-  let allPokes = await pokeContract.getAllPokes();
-  console.log(allPokes);
 
   const [_, randomPerson] = await hre.ethers.getSigners();
   pokeTx = await pokeContract.connect(randomPerson).poke("Some other message");
