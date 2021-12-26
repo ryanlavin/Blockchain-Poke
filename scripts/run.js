@@ -1,42 +1,24 @@
-const main = async () => {
-  const [owner, randomPerson] = await hre.ethers.getSigners();
-  const m = new Map();
+const hre = require("hardhat");
+const { ethers } = require("hardhat");
 
-  const pokeContractFactory = await hre.ethers.getContractFactory('PokePortal');
+const main = async () => {
+  const pokeContractFactory = await hre.ethers.getContractFactory('PokeContract');
   const pokeContract = await pokeContractFactory.deploy();
   await pokeContract.deployed();
 
   console.log("Contract deployed to:", pokeContract.address);
-  console.log("Contract deployed by:", owner.address);
+  //console.log("Contract deployed by:", owner.address);
 
-  let pokeCount;
-  pokeCount = await pokeContract.getTotalPokes();
+  let pokeTx = pokeContract.poke("Some message");
+  await pokeTx.wait;
+  let allPokes = await pokeContract.getAllPokes();
+  console.log(allPokes);
 
-  let poke;
-  poke = await pokeContract.poke();
-  await poke.wait();
+  const [_, randomPerson] = await hre.ethers.getSigners();
+  pokeTx = await pokeContract.connect(randomPerson).poke("Some other message");
+  await pokeTx.wait;
 
-  let n = await pokeContract.getTotalPokes();
-  console.log(n.toNumber());
-  n = n.toNumber();
-  m.set(n, poke.address);
-
-  //poke = await pokeContract.connect(randomPerson).poke();
-  //await poke.wait();
-
-  n = await pokeContract.getTotalPokes();
-  n = n.toNumber();
-  //m.set(n, randomPerson.address);
-
-  //console.log(randomPerson.address);
-  console.log(await pokeContract.getLastPoker());
-
-  n = await pokeContract.getTotalPokes();
-  n = n.toNumber();
-  console.log(n);
-  //console.log(m.get(n));
-  console.log(m.size);
-
+  console.log(await pokeContract.getAllPokes());
 };
 
 const runMain = async () => {
