@@ -7,11 +7,12 @@ import { Input } from 'antd';
 import 'antd/dist/antd.css';
 const { TextArea } = Input;
 
-function App() {
+const App = () => {
   const [currentAccount, setCurrentAccount] = useState();
-  const contractAddress = "0x32cE3DEd96f35C2CB8575D94232f23ab033ebBD9";
+  const contractAddress = "0x0CD65B5a2b361e00B733A1BC42E39C1860c5Af73";
   const contractABI = abi.abi;
   const [allPokes, setAllPokes] = useState([]);
+  const [text, setText] = useState("");
 
   const checkIfWalletIsConnected = async () => {
     try {
@@ -29,7 +30,7 @@ function App() {
         const account = accounts[0];
         console.log("Found an authorized account:", account);
         setCurrentAccount(account);
-        getAllPokes();
+        await getAllPokes();
       } else {
         console.log("No authorized account found")
       }
@@ -63,17 +64,21 @@ function App() {
     const { ethereum } = window;
     if(ethereum){
       try {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const provider = new ethers.providers.Web3Provider(ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract(contractAddress, contractABI, signer);
 
-        let pokeTx = await contract.poke("Hardcoded message");
+        const currText = text;
+        console.log(currText);
+        let pokeTx = await contract.poke(currText);
+        setText("");
         console.log("Awaiting Tx: ", pokeTx.hash);
 
         await pokeTx.wait();
         console.log("Mined -- ", pokeTx.hash);
         let str = pokeTx.hash.toString();
         console.log("Link: https://rinkeby.etherscan.io/tx/" + str);
+        await getAllPokes();
 
       } catch (error) {
         console.log(error);
@@ -94,13 +99,13 @@ function App() {
         let pokeData = [];
         pokes.forEach(poke => {
           pokeData.push({
-            address: pokes.from,
-            timestamp: new Date(pokes.timestamp * 1000).valueOf(),
-            message: pokes.message
+            address: poke.poker,
+            timestamp: new Date(pokes.timestamp * 1000),
+            message: poke.message
           });
         });
 
-        setAllPokes(pokes);
+        setAllPokes(pokeData);
       } else {
         console.log("Ethereum object is null")
       }
@@ -128,7 +133,6 @@ function App() {
 
   return (
    <div className="mainContainer">
-
       <div className="dataContainer">
         <div className="header">
         👋 Hey there!
@@ -152,12 +156,13 @@ function App() {
           </button>
         )}
         {currentAccount && (
-            <TextArea placeholder="Input text here before poking me to add a message!" style={{marginTop: "10px"}}>
+            <TextArea value={text} onChange={e => setText(e.target.value)} placeholder="Input text here before poking me to add a message!"
+                      style={{marginTop: "10px"}}>
             </TextArea>
         )}
         {allPokes.map((poke, index) => {
           return (
-            <div key={index} style={{ backgroundColor: "OldLace", marginTop: "16px", padding: "8px" }}>
+            <div key={index} style={{ backgroundColor: "#FEF5E6", marginTop: "16px", padding: "8px" }}>
               <div>Address: {poke.address}</div>
               <div>Time: {poke.timestamp.toString()}</div>
               <div>Message: {poke.message}</div>

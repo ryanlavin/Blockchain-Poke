@@ -10,10 +10,10 @@ contract PokeContract {
         console.log("Smart Contract Construction");
     }
 
-    event NewPoke(address indexed from, uint256 _timestamp, string _message);
+    event NewPoke(address indexed from, uint256 timestamp, string message);
 
     struct Poke {
-        address from;
+        address poker;
         uint256 timestamp;
         string message;
     }
@@ -29,7 +29,7 @@ contract PokeContract {
 
     function getFrontAddress() public view returns (address) {
         if(pokes.length > 0) {
-            return pokes[0].from;
+            return pokes[0].poker;
         }
         return address(0);
     }
