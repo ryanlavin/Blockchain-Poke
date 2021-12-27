@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
-import logo from './logo.svg';
 import './App.css';
 import { ethers } from "ethers";
 import abi from './utils/PokeContract.json';
+
+import { Input } from 'antd';
+import 'antd/dist/antd.css';
+const { TextArea } = Input;
 
 function App() {
   const [currentAccount, setCurrentAccount] = useState();
@@ -92,7 +95,7 @@ function App() {
         pokes.forEach(poke => {
           pokeData.push({
             address: pokes.from,
-            timestamp: new Date(pokes.timestamp * 1000),
+            timestamp: new Date(pokes.timestamp * 1000).valueOf(),
             message: pokes.message
           });
         });
@@ -132,7 +135,7 @@ function App() {
         </div>
 
         <div className="bio">
-        My name's Ryan and I am a blockchain dev. Feel free to poke me and leave a message!
+        My name's Ryan and I'm a blockchain dev. Feel free to poke me and leave a message!
         </div>
 
         <div className="funcButtons">
@@ -147,6 +150,10 @@ function App() {
           <button className="walletButton" onClick={connectWallet}>
                 Connect Wallet
           </button>
+        )}
+        {currentAccount && (
+            <TextArea placeholder="Input text here before poking me to add a message!" style={{marginTop: "10px"}}>
+            </TextArea>
         )}
         {allPokes.map((poke, index) => {
           return (

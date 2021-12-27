@@ -50,6 +50,14 @@
   flex-grow: 2;
 }
 
+.textbox {
+  width: 97%;
+  height: 56px;
+  border-radius: 4px;
+  position: relative;
+  margin-top: 8px;
+  padding: 0;
+}
 #getPokesButton {
   cursor: pointer;
   align-content: end;
