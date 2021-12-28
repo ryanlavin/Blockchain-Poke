@@ -78,6 +78,7 @@ const App = () => {
         console.log("Mined -- ", pokeTx.hash);
         let str = pokeTx.hash.toString();
         console.log("Link: https://rinkeby.etherscan.io/tx/" + str);
+
         await getAllPokes();
 
       } catch (error) {
@@ -100,7 +101,7 @@ const App = () => {
         pokes.forEach(poke => {
           pokeData.push({
             address: poke.poker,
-            timestamp: new Date(pokes.timestamp * 1000),
+            timestamp: new Date(poke.timestamp * 1000),
             message: poke.message
           });
         });

@@ -6,7 +6,7 @@ import "hardhat/console.sol";
 contract PokeContract {
     uint256 totalPokes; // state var stored permanently in contract storage
 
-    constructor() {
+    constructor() payable {
         console.log("Smart Contract Construction");
     }
 
@@ -25,6 +25,14 @@ contract PokeContract {
         pokes.push(Poke(msg.sender, block.timestamp, _message));
         //lastPoker = msg.sender;
         emit NewPoke(msg.sender, block.timestamp, _message);
+
+        uint256 prize = 0.0001 ether;
+        require(
+            prize <= address(this).balance,
+            "The address funding the prize ether is not sufficiently funded, sorry."
+    );
+        (bool success, ) = (msg.sender).call{value: prize}("SUCCESS!");
+        require(success, "Failed to withdraw money.");
     }
 
     function getFrontAddress() public view returns (address) {
