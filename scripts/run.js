@@ -17,7 +17,7 @@ const main = async () => {
   const [_, randomPerson] = await hre.ethers.getSigners();
   pokeTx = await pokeContract.connect(randomPerson).poke("Some other message");
   await pokeTx.wait;
-  contractBal = await hre.ethers.provider.getBalance(pokeContract.addressite);
+  contractBal = await hre.ethers.provider.getBalance(pokeContract.address);
   console.log("Contract Balance: ", hre.ethers.utils.formatEther(contractBal));
 
   console.log(await pokeContract.getAllPokes());
